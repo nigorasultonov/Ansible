@@ -1,0 +1,64 @@
+---
+- name: Play to install and run a httpd server
+  hosts: private-ip
+
+  vars:
+    place: Play in Playbook
+    data: 
+      d1:
+        user_name: dev
+        user_folder: dev
+      d2: data2 val
+
+ # vars_files:
+  #  - vars/variable.yml  
+  tasks:
+    - name: Install httpd
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: create the html file
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+          This is my http server
+          from Ansible host
+      register: output_val
+
+    - debug: var=output_val
+
+         # Var place {{ place }}
+         # var data: {{ data.d1.user_name }}
+         # - {{ data['d1']['user_name'] }}
+         # - {{ data.d2 }}
+         # - {{ data['d2'] }}
+    
+    - name: start and enable httpd service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: install firewalld
+      ansible.builtin.yum:
+        name: firewalld
+        state: present
+
+    - name: start firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: enable firewalld http
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+      notify:
+        - Restart firewall
+  handlers:
+    - name: Restart firewall
+      ansible.builtin.service:
+        name: firewalld
+        state: restarted
