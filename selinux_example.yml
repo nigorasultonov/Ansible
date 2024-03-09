@@ -1,0 +1,9 @@
+---
+- name: selinux test
+  hosts: private-ip
+  tasks:
+    - name: Apply Selinux role
+      include_role:
+        name: redhat.rhel_system_roles.timesync
+      vars: 
+        pool: yes
