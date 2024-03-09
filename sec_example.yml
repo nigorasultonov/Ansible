@@ -1,0 +1,10 @@
+---
+- name: A simple play to test secrets
+  hosts: all
+  roles:
+    - role: debug_ex
+  tasks: 
+    - name: debug
+      debug:
+        msg: task in playbook
+       
