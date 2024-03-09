@@ -1,5 +1,0 @@
----
-# handlers file for debug_ex
-- name: handler in role
-  debug: 
-    msg: Handler in Role {{ place }}
